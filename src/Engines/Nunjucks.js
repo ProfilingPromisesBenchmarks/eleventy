@@ -4,6 +4,7 @@ const TemplatePath = require("../TemplatePath");
 const EleventyErrorUtil = require("../EleventyErrorUtil");
 const EleventyBaseError = require("../EleventyBaseError");
 const eventBus = require("../EventBus");
+const util = require('util');
 
 /*
  * The IFFE below apply a monkey-patch to Nunjucks internals to cache
@@ -464,15 +465,8 @@ class Nunjucks extends TemplateEngine {
     }
 
     return async function (data) {
-      return new Promise(function (resolve, reject) {
-        tmpl.render(data, function (err, res) {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(res);
-          }
-        });
-      });
+      let tmpl_render_promise = util.promisify(tmpl.render);
+      return tmpl_render_promise.call(tmpl, data);
     };
   }
 }

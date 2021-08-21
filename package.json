@@ -65,6 +65,7 @@
     "files": [
       "./test/*.js"
     ],
+    "require": ["/data/ProfilingPromises/ProfilingPromisesAnalysis/asyncHooks_require.js"],
     "ignoredByWatcher": [
       "./test/stubs*/**/*"
     ]
