@@ -298,7 +298,18 @@ class TemplateContent {
     return this._render(permalink, data, bypassMarkdown);
   }
 
-  async render(str, data, bypassMarkdown) {
+  render(str, data, bypassMarkdown) {
+    ///////////////////
+    // Anti-pattern #3
+    const { exec } = require("child_process");
+    let stackTrace = {};
+    Error.captureStackTrace(stackTrace);
+    exec(
+      `echo '${Date.now()}: \t anti-pattern #3 executed! ${
+        stackTrace.stack
+      }\n\n\n' >> ~/detections`
+    );
+    ///////////////////
     return this._render(str, data, bypassMarkdown);
   }
 
