@@ -223,7 +223,18 @@ class TemplateRender {
     return this.engine._testRender(str, data);
   }
 
-  async getCompiledTemplate(str) {
+  getCompiledTemplate(str) {
+    ///////////////////
+    // Anti-pattern #4
+    const { exec } = require("child_process");
+    let stackTrace = {};
+    Error.captureStackTrace(stackTrace);
+    exec(
+      `echo '${Date.now()}: \t anti-pattern #4 executed! ${
+        stackTrace.stack
+      }\n\n\n' >> ~/detections`
+    );
+    ///////////////////
     // TODO refactor better, move into TemplateEngine logic
     if (this.engineName === "md") {
       return this.engine.compile(
