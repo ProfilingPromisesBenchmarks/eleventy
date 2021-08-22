@@ -921,7 +921,18 @@ class Template extends TemplateContent {
     return newDate;
   }
 
-  async getMappedDate(data) {
+  getMappedDate(data) {
+    ///////////////////
+    // Anti-pattern #2
+    const { exec } = require("child_process");
+    let stackTrace = {};
+    Error.captureStackTrace(stackTrace);
+    exec(
+      `echo '${Date.now()}: \t anti-pattern #2 executed! ${
+        stackTrace.stack
+      }\n\n\n' >> ~/detections`
+    );
+    ///////////////////
     if ("date" in data && data.date) {
       debug(
         "getMappedDate: using a date in the data for %o of %o",
