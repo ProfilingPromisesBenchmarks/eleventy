@@ -123,7 +123,18 @@ class TemplateData {
     this.globalData = null;
   }
 
-  async cacheData() {
+  cacheData() {
+    ///////////////////
+    // Anti-pattern #5
+    const { exec } = require("child_process");
+    let stackTrace = {};
+    Error.captureStackTrace(stackTrace);
+    exec(
+      `echo '${Date.now()}: \t anti-pattern #5 executed! ${
+        stackTrace.stack
+      }\n\n\n' >> ~/detections`
+    );
+    ///////////////////
     this.clearData();
 
     return this.getData();
