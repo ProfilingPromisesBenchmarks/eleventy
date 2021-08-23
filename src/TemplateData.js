@@ -349,13 +349,24 @@ class TemplateData {
       return localData;
     }
 
-    for (let path of localDataPaths) {
-      // clean up data for template/directory data files only.
-      let dataForPath = await this.getDataValue(path, null, true);
+    // DR-ASYNC REFACTOR AWAIT-IN-LOOP
+    // for (let path of localDataPaths) { console.log("*** EXECUTING /src/TemplateData.js:352:358");
+    //   // clean up data for template/directory data files only.
+    //   let dataForPath = await this.getDataValue(path, null, true);
+    //   let cleanedDataForPath = TemplateData.cleanupData(dataForPath);
+    //   TemplateData.mergeDeep(this.config, localData, cleanedDataForPath);
+    //   // debug("`combineLocalData` (iterating) for %o: %O", path, localData);
+    // }
+
+    let results = await Promise.all(
+      localDataPaths.map((path) => this.getDataValue(path, null, true))
+    );
+    for (let dataForPath of results) {
       let cleanedDataForPath = TemplateData.cleanupData(dataForPath);
       TemplateData.mergeDeep(this.config, localData, cleanedDataForPath);
       // debug("`combineLocalData` (iterating) for %o: %O", path, localData);
     }
+
     return localData;
   }
 
