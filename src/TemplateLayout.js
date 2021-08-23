@@ -119,13 +119,24 @@ class TemplateLayout extends TemplateContent {
   async getCompiledLayoutFunctions(layoutMap) {
     let fns = [];
     try {
-      for (let layoutEntry of layoutMap) {
-        fns.push(
-          await layoutEntry.template.compile(
-            await layoutEntry.template.getPreRender()
-          )
-        );
-      }
+      // DR-ASYNC REFACTOR AWAIT-IN-LOOP
+      // for (let layoutEntry of layoutMap) { //console.log("*** EXECUTING awaitInLoop /src/TemplateLayout.js:122:128");
+      //   fns.push(
+      //     await layoutEntry.template.compile(
+      //       await layoutEntry.template.getPreRender()
+      //     )
+      //   );
+      // }
+
+      let preRenders = await Promise.all(
+        layoutMap.map((layoutEntry) => layoutEntry.template.getPreRender())
+      );
+      let compiled = await Promise.all(
+        layoutMap.map((layoutEntry, index) =>
+          layoutEntry.template.compile(preRenders[index])
+        )
+      );
+      layoutMap.forEach((_, index) => fns.push(compiled[index]));
     } catch (e) {
       debugDev("Clearing TemplateCache after error.");
       templateCache.clear();
@@ -157,6 +168,7 @@ class TemplateLayout extends TemplateContent {
     let layoutMap = await this.getTemplateLayoutMap();
     let fns = await this.getCompiledLayoutFunctions(layoutMap);
     for (let fn of fns) {
+      //console.log("*** EXECUTING: 4:  awaitInLoop /src/TemplateLayout.js:159:162");
       templateContent = await fn(data);
       data = TemplateLayout.augmentDataWithContent(data, templateContent);
     }
