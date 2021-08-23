@@ -455,11 +455,21 @@ class TemplateMap {
         continue;
       }
       try {
-        for (let pageEntry of map._pages) {
-          pageEntry.templateContent = await map.template.getTemplateMapContent(
-            pageEntry
-          );
-        }
+        // DR-ASYNC REFACTOR AWAIT-IN-LOOP
+        // for (let pageEntry of map._pages) { console.log("*** EXECUTING: TemplateMap.js:458");
+        //   pageEntry.templateContent = await map.template.getTemplateMapContent(
+        //     pageEntry
+        //   );
+        // }
+
+        let ps = await Promise.all(
+          map._pages.map((pageEntry) =>
+            map.template.getTemplateMapContent(pageEntry)
+          )
+        );
+        map._pages.forEach((pageEntry, index) => {
+          pageEntry.templateContent = ps[index];
+        });
       } catch (e) {
         if (EleventyErrorUtil.isPrematureTemplateContentError(e)) {
           usedTemplateContentTooEarlyMap.push(map);
@@ -474,11 +484,21 @@ class TemplateMap {
 
     for (let map of usedTemplateContentTooEarlyMap) {
       try {
-        for (let pageEntry of map._pages) {
-          pageEntry.templateContent = await map.template.getTemplateMapContent(
-            pageEntry
-          );
-        }
+        // DR-ASYNC REFACTOR AWAIT-IN-LOOP
+        // for (let pageEntry of map._pages) { console.log("*** EXECUTING: /src/TemplateMap.js:477:481");
+        //   pageEntry.templateContent = await map.template.getTemplateMapContent(
+        //     pageEntry
+        //   );
+        // }
+
+        let results = await Promise.all(
+          map._pages.map((pageEntry) =>
+            map.template.getTemplateMapContent(pageEntry)
+          )
+        );
+        map._pages.forEach((pageEntry, index) => {
+          pageEntry.templateContent = results[index];
+        });
       } catch (e) {
         if (EleventyErrorUtil.isPrematureTemplateContentError(e)) {
           throw new UsingCircularTemplateContentReferenceError(
