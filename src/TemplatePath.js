@@ -255,14 +255,20 @@ TemplatePath.isDirectorySync = function (path) {
  * @returns {Boolean} whether `path` points to an existing directory.
  */
 TemplatePath.isDirectory = async function (path) {
-  return new Promise((resolve) => {
-    fs.stat(path, (err, stats) => {
-      if (stats) {
-        resolve(stats.isDirectory());
-      }
-      resolve(false);
-    });
-  });
+  console.log("*** EXECUTING src/TemplatePath.js:258:265");
+  // return new Promise((resolve) => {
+  //   fs.stat(path, (err, stats) => {
+  //     if (stats) {
+  //       resolve(stats.isDirectory());
+  //     }
+  //     resolve(false);
+  //   });
+  // });
+
+  return fs.promises
+    .stat(path)
+    .then((stats) => stats.isDirectory())
+    .catch(() => false);
 };
 
 /**
