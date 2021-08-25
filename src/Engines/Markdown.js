@@ -70,6 +70,13 @@ class Markdown extends TemplateEngine {
       } else {
         return async function (data) {
           let fn = await fnReady;
+          ///////////////////
+          // Anti-pattern #2.1
+          // const { exec } = require("child_process");
+          // let stackTrace = {};
+          // Error.captureStackTrace(stackTrace);
+          // exec(`echo '${Date.now()}: \t anti-pattern #2.1 executed! ${stackTrace.stack}\n\n\n' >> ~/detections`);
+          ///////////////////
           let preTemplateEngineRender = await fn(data);
           let finishedRender = mdlib.render(preTemplateEngineRender, data);
           return finishedRender;
