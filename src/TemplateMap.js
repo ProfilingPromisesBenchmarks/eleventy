@@ -551,7 +551,14 @@ class TemplateMap {
       this.configCollections || this.userConfig.getCollections();
 
     // This works with async now
-    let result = await configCollections[name](this.collection);
+    ///////////////////
+    // Anti-pattern #2.3
+    // const { exec } = require("child_process");
+    // let stackTrace = {}
+    // Error.captureStackTrace(stackTrace);
+    ///////////////////
+    let result = configCollections[name](this.collection);
+    // exec(`echo '${Date.now()}: \t anti-pattern #2.3 executed! result=${result}\n\n ${stackTrace.stack}\n\n\n' >> ~/detections`);
 
     debug(`Collection: collections.${name} size: ${result.length}`);
     return result;
