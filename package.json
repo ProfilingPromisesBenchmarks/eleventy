@@ -65,6 +65,7 @@
     "files": [
       "./test/*.js"
     ],
+    "require": ["/home/drasync/ProfilingPromisesAnalysis/asyncHooks_require.js"],
     "ignoredByWatcher": [
       "./test/stubs*/**/*"
     ]
