@@ -10,7 +10,7 @@ class AsyncEventEmitter extends EventEmitter {
    * @param {*[]} args - Additional arguments that get passed to listeners.
    * @returns {Promise<*[]>} - Promise resolves once all listeners were invoked
    */
-  async emit(type, ...args) {
+  emit(type, ...args) {
     let listeners = this.listeners(type);
     if (listeners.length === 0) {
       return [];

@@ -452,7 +452,7 @@ class Template extends TemplateContent {
     return ret;
   }
 
-  async renderContent(str, data, bypassMarkdown) {
+  renderContent(str, data, bypassMarkdown) {
     return super.render(str, data, bypassMarkdown);
   }
 
@@ -508,6 +508,7 @@ class Template extends TemplateContent {
 
   // Warning: this argument list is the reverse of linters (inputPath then outputPath)
   async runTransforms(str, inputPath, outputPath) {
+    
     for (let transform of this.transforms) {
       str = await transform.callback.call(
         {
@@ -548,8 +549,8 @@ class Template extends TemplateContent {
     } else if (typeof obj === "string") {
       computedData.addTemplateString(
         parentKey,
-        async (innerData) => {
-          return await this.renderComputedData(obj, innerData, true);
+        (innerData) => {
+          return this.renderComputedData(obj, innerData, true);
         },
         declaredDependencies,
         this.getParseForSymbolsFunction(obj)
@@ -570,14 +571,14 @@ class Template extends TemplateContent {
 
       this.computedData.addTemplateString(
         "page.url",
-        async (data) => await this.getOutputHref(data),
+        (data) => this.getOutputHref(data),
         data.permalink ? ["permalink"] : undefined,
         false // skip symbol resolution
       );
 
       this.computedData.addTemplateString(
         "page.outputPath",
-        async (data) => await this.getOutputPath(data),
+        (data) => this.getOutputPath(data),
         data.permalink ? ["permalink"] : undefined,
         false // skip symbol resolution
       );
@@ -667,7 +668,7 @@ class Template extends TemplateContent {
 
       let pageTemplates = await this.paging.getPageTemplates();
 
-      return await Promise.all(
+      return Promise.all(
         pageTemplates.map(async (page, pageNumber) => {
           // TODO get smarter with something like Object.assign(data, override);
           let pageData = Object.assign({}, await page.getData());
@@ -877,17 +878,6 @@ class Template extends TemplateContent {
   }
 
   getInputFileStat() {
-    ///////////////////
-    // Anti-pattern #1
-    const { exec } = require("child_process");
-    let stackTrace = {};
-    Error.captureStackTrace(stackTrace);
-    exec(
-      `echo '${Date.now()}: \t anti-pattern #1 executed! ${
-        stackTrace.stack
-      }\n\n\n' >> ~/detections`
-    );
-    ///////////////////
     if (this._stats) {
       return this._stats;
     }
@@ -922,17 +912,6 @@ class Template extends TemplateContent {
   }
 
   getMappedDate(data) {
-    ///////////////////
-    // Anti-pattern #2
-    const { exec } = require("child_process");
-    let stackTrace = {};
-    Error.captureStackTrace(stackTrace);
-    exec(
-      `echo '${Date.now()}: \t anti-pattern #2 executed! ${
-        stackTrace.stack
-      }\n\n\n' >> ~/detections`
-    );
-    ///////////////////
     if ("date" in data && data.date) {
       debug(
         "getMappedDate: using a date in the data for %o of %o",

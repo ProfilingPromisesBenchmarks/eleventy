@@ -90,17 +90,10 @@ class ComputedData {
 
   async _setupDataEntry(data, order) {
     debug("Computed data order of execution: %o", order);
-
+    
     for (let key of order) {
       let computed = lodashGet(this.computed, key);
       if (typeof computed === "function") {
-        ///////////////////
-        // Anti-pattern #2.2
-        // const { exec } = require("child_process");
-        // let stackTrace = {};
-        // Error.captureStackTrace(stackTrace);
-        // exec(`echo '${Date.now()}: \t anti-pattern #2.2 executed! ${stackTrace.stack}\n\n\n' >> ~/detections`);
-        ///////////////////
         let ret = await computed(data);
         lodashSet(data, key, ret);
       } else if (computed !== undefined) {

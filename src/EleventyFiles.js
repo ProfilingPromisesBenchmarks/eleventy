@@ -418,7 +418,7 @@ class EleventyFiles {
   /* For `eleventy --watch` */
   async getGlobWatcherTemplateDataFiles() {
     let templateData = this.templateData;
-    return await templateData.getTemplateDataFileGlob();
+    return templateData.getTemplateDataFileGlob();
   }
 
   /* For `eleventy --watch` */

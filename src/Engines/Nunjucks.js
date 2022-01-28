@@ -445,7 +445,7 @@ class Nunjucks extends TemplateEngine {
     return Array.from(new Set(symbols));
   }
 
-  async compile(str, inputPath) {
+  compile(str, inputPath) {
     if (!this.needsCompilation(str)) {
       return async function () {
         return str;
@@ -463,7 +463,7 @@ class Nunjucks extends TemplateEngine {
       tmpl = new NunjucksLib.Template(str, this.njkEnv, inputPath, true);
     }
 
-    return async function (data) {
+    return function (data) {
       return new Promise(function (resolve, reject) {
         tmpl.render(data, function (err, res) {
           if (err) {

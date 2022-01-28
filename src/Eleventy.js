@@ -871,7 +871,7 @@ Arguments:
    * @method
    * @returns {Promise<{}>}
    */
-  async write() {
+  write() {
     return this.executeBuild();
   }
 
@@ -882,7 +882,7 @@ Arguments:
    * @method
    * @returns {Promise<{}>}
    */
-  async toJSON() {
+  toJSON() {
     return this.executeBuild("json");
   }
 
@@ -893,7 +893,7 @@ Arguments:
    * @method
    * @returns {Promise<{ReadableStream}>}
    */
-  async toNDJSON() {
+  toNDJSON() {
     return this.executeBuild("ndjson");
   }
 

@@ -290,26 +290,15 @@ class TemplateContent {
     }
   }
 
-  async renderComputedData(str, data) {
+  renderComputedData(str, data) {
     return this._render(str, data, true);
   }
 
-  async renderPermalink(permalink, data, bypassMarkdown) {
+  renderPermalink(permalink, data, bypassMarkdown) {
     return this._render(permalink, data, bypassMarkdown);
   }
 
   render(str, data, bypassMarkdown) {
-    ///////////////////
-    // Anti-pattern #3
-    const { exec } = require("child_process");
-    let stackTrace = {};
-    Error.captureStackTrace(stackTrace);
-    exec(
-      `echo '${Date.now()}: \t anti-pattern #3 executed! ${
-        stackTrace.stack
-      }\n\n\n' >> ~/detections`
-    );
-    ///////////////////
     return this._render(str, data, bypassMarkdown);
   }
 

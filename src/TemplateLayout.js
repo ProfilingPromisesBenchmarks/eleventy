@@ -119,17 +119,24 @@ class TemplateLayout extends TemplateContent {
   async getCompiledLayoutFunctions(layoutMap) {
     let fns = [];
     try {
-      for (let layoutEntry of layoutMap) {
+      await Promise.all(layoutMap.map(async layoutEntry => {
         fns.push(
           await layoutEntry.template.compile(
             await layoutEntry.template.getPreRender()
           )
         );
-      }
+      }));
+      // for (let layoutEntry of layoutMap) {
+      //   fns.push(
+      //     await layoutEntry.template.compile(
+      //       await layoutEntry.template.getPreRender()
+      //     )
+      //   );
+      // }
     } catch (e) {
       debugDev("Clearing TemplateCache after error.");
       templateCache.clear();
-      return Promise.reject(e);
+      throw e;
     }
 
     return fns;

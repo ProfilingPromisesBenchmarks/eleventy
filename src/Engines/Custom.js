@@ -84,7 +84,7 @@ class CustomEngine extends TemplateEngine {
           inputPath,
           ...args
         );
-        return await render(data);
+        return render(data);
       };
     }
 

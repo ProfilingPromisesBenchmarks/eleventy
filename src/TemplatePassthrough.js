@@ -80,7 +80,7 @@ class TemplatePassthrough {
    * 2. directory, triggers an event for each file
    * 3. individual file
    */
-  async copy(src, dest, copyOptions) {
+  copy(src, dest, copyOptions) {
     if (
       !TemplatePath.stripLeadingDotSlash(dest).includes(
         TemplatePath.stripLeadingDotSlash(this.outputDir)

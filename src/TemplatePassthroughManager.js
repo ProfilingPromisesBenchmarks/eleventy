@@ -101,7 +101,7 @@ class TemplatePassthroughManager {
     return new TemplatePassthrough(path, this.outputDir, this.inputDir);
   }
 
-  async copyPassthrough(pass) {
+  copyPassthrough(pass) {
     if (!(pass instanceof TemplatePassthrough)) {
       throw new TemplatePassthroughManagerCopyError(
         "copyPassthrough expects an instance of TemplatePassthrough"
@@ -144,12 +144,10 @@ class TemplatePassthroughManager {
         }
       })
       .catch(function (e) {
-        return Promise.reject(
-          new TemplatePassthroughManagerCopyError(
+        throw new TemplatePassthroughManagerCopyError(
             `Having trouble copying '${path.inputPath}'`,
             e
           )
-        );
       });
   }
 
@@ -202,7 +200,7 @@ class TemplatePassthroughManager {
   // Performance note: these can actually take a fair bit of time, but aren’t a
   // bottleneck to eleventy. The copies are performed asynchronously and don’t affect eleventy
   // write times in a significant way.
-  async copyAll(paths) {
+  copyAll(paths) {
     debug("TemplatePassthrough copy started.");
     let normalizedPaths = this.getAllNormalizedPaths(paths);
     let passthroughs = [];

@@ -447,14 +447,16 @@ class TemplateMap {
 
   async populateContentDataInMap(orderedMap) {
     let usedTemplateContentTooEarlyMap = [];
+    // await Promise.all(orderedMap.map(async map => {
     for (let map of orderedMap) {
       if (!map._pages) {
         throw new Error(`Content pages not found for ${map.inputPath}`);
       }
       if (!map.template.behavior.isRenderable()) {
-        continue;
+        return;
       }
       try {
+        // await Promise.all(map._pages.map(async pageEntry => {
         for (let pageEntry of map._pages) {
           pageEntry.templateContent = await map.template.getTemplateMapContent(
             pageEntry
@@ -471,9 +473,36 @@ class TemplateMap {
         "Added this.map[...].templateContent, outputPath, et al for one map entry"
       );
     }
+    // for (let map of orderedMap) {
+      
+    // }
+
+    // await Promise.all(usedTemplateContentTooEarlyMap.map(async map => {
+    //   try {
+    //     await Promise.all(map._pages.map(async pageEntry => {
+    //       pageEntry.templateContent = await map.template.getTemplateMapContent(
+    //         pageEntry
+    //       );
+    //     }));
+    //   } catch (e) {
+    //     if (EleventyErrorUtil.isPrematureTemplateContentError(e)) {
+    //       throw new UsingCircularTemplateContentReferenceError(
+    //         `${map.inputPath} contains a circular reference (using collections) to its own templateContent.`
+    //       );
+    //     } else {
+    //       // rethrow?
+    //       throw e;
+    //     }
+    //   }
+    // }));
 
     for (let map of usedTemplateContentTooEarlyMap) {
       try {
+        // await Promise.all(map._pages.map(async pageEntry => {
+        //   pageEntry.templateContent = await map.template.getTemplateMapContent(
+        //     pageEntry
+        //   );
+        // }));
         for (let pageEntry of map._pages) {
           pageEntry.templateContent = await map.template.getTemplateMapContent(
             pageEntry
@@ -550,15 +579,7 @@ class TemplateMap {
     let configCollections =
       this.configCollections || this.userConfig.getCollections();
 
-    // This works with async now
-    ///////////////////
-    // Anti-pattern #2.3
-    // const { exec } = require("child_process");
-    // let stackTrace = {}
-    // Error.captureStackTrace(stackTrace);
-    ///////////////////
     let result = configCollections[name](this.collection);
-    // exec(`echo '${Date.now()}: \t anti-pattern #2.3 executed! result=${result}\n\n ${stackTrace.stack}\n\n\n' >> ~/detections`);
 
     debug(`Collection: collections.${name} size: ${result.length}`);
     return result;
@@ -614,7 +635,7 @@ class TemplateMap {
     }
   }
 
-  async resolveRemainingComputedData() {
+  resolveRemainingComputedData() {
     let promises = [];
     for (let entry of this.map) {
       for (let page of entry._pages) {

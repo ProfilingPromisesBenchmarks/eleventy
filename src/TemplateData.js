@@ -124,17 +124,6 @@ class TemplateData {
   }
 
   cacheData() {
-    ///////////////////
-    // Anti-pattern #5
-    const { exec } = require("child_process");
-    let stackTrace = {};
-    Error.captureStackTrace(stackTrace);
-    exec(
-      `echo '${Date.now()}: \t anti-pattern #5 executed! ${
-        stackTrace.stack
-      }\n\n\n' >> ~/detections`
-    );
-    ///////////////////
     this.clearData();
 
     return this.getData();
@@ -303,7 +292,8 @@ class TemplateData {
   async getInitialGlobalData() {
     let globalData = {};
     if (this.config.globalData) {
-      let keys = Object.keys(this.config.globalData);
+      let keys = Object.keys(this.config.globalData); 
+
       for (let key of keys) {
         let returnValue = this.config.globalData[key];
 
@@ -360,9 +350,13 @@ class TemplateData {
       return localData;
     }
 
-    for (let path of localDataPaths) {
+    const dataForPaths = await Promise.all(localDataPaths.map(path => 
+      this.getDataValue(path, null, true)
+    ));
+
+    for (let dataForPath of dataForPaths) {
       // clean up data for template/directory data files only.
-      let dataForPath = await this.getDataValue(path, null, true);
+      // let dataForPath = await this.getDataValue(path, null, true);
       let cleanedDataForPath = TemplateData.cleanupData(dataForPath);
       TemplateData.mergeDeep(this.config, localData, cleanedDataForPath);
       // debug("`combineLocalData` (iterating) for %o: %O", path, localData);

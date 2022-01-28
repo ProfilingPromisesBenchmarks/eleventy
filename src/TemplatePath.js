@@ -254,7 +254,7 @@ TemplatePath.isDirectorySync = function (path) {
  * @param {String} path A path
  * @returns {Boolean} whether `path` points to an existing directory.
  */
-TemplatePath.isDirectory = async function (path) {
+TemplatePath.isDirectory = function (path) {
   return new Promise((resolve) => {
     fs.stat(path, (err, stats) => {
       if (stats) {

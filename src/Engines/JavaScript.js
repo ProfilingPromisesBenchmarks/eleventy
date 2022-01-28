@@ -89,9 +89,9 @@ class JavaScript extends TemplateEngine {
     }
   }
 
-  async getExtraDataFromFile(inputPath) {
+  getExtraDataFromFile(inputPath) {
     let inst = this.getInstanceFromInputPath(inputPath);
-    return await getJavaScriptData(inst, inputPath);
+    return getJavaScriptData(inst, inputPath);
   }
 
   getJavaScriptFunctions(inst) {
@@ -109,7 +109,7 @@ class JavaScript extends TemplateEngine {
     return fns;
   }
 
-  async compile(str, inputPath) {
+  compile(str, inputPath) {
     let inst;
     if (str) {
       // When str has a value, it's being used for permalinks in data

@@ -222,7 +222,7 @@ class TemplateWriter {
     return tmpl;
   }
 
-  async _addToTemplateMap(paths, to = "fs") {
+  _addToTemplateMap(paths, to = "fs") {
     let promises = [];
     for (let path of paths) {
       if (this.extensionMap.hasEngine(path)) {
@@ -246,7 +246,7 @@ class TemplateWriter {
     return this.templateMap;
   }
 
-  async _generateTemplate(mapEntry, to) {
+  _generateTemplate(mapEntry, to) {
     let tmpl = mapEntry.template;
 
     return tmpl.generateMapEntry(mapEntry, to).then((pages) => {
@@ -256,15 +256,13 @@ class TemplateWriter {
     });
   }
 
-  async writePassthroughCopy(paths) {
+  writePassthroughCopy(paths) {
     let passthroughManager = this.eleventyFiles.getPassthroughManager();
     passthroughManager.setIncrementalFile(this.incrementalFile);
 
     return passthroughManager.copyAll(paths).catch((e) => {
       this.errorHandler.warn(e, "Error with passthrough copy");
-      return Promise.reject(
-        new TemplateWriterWriteError("Having trouble copying", e)
-      );
+      throw new TemplateWriterWriteError("Having trouble copying", e)
     });
   }
 
@@ -286,12 +284,10 @@ class TemplateWriter {
           if (EleventyErrorUtil.isPrematureTemplateContentError(e)) {
             usedTemplateContentTooEarlyMap.push(mapEntry);
           } else {
-            return Promise.reject(
-              new TemplateWriterWriteError(
+            throw new TemplateWriterWriteError(
                 `Having trouble writing template: ${mapEntry.outputPath}`,
                 e
               )
-            );
           }
         })
       );
@@ -322,7 +318,7 @@ class TemplateWriter {
     promises.push(...(await this.generateTemplates(paths)));
 
     return Promise.all(promises).catch((e) => {
-      return Promise.reject(e);
+      throw e;
     });
   }
 
